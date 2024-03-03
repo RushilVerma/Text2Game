@@ -7,8 +7,8 @@ def read_novel_data(data):
 
     # Split the data into title, chapter title, and text
     title_index = data.find("Title:") + len("Title:")
-    title = data[title_index:data.find("\n", title_index)].replace('"', '')
-
+    title = data[title_index:data.find("\n", title_index)].replace('"', '').replace(":"," ")
+    title = title[1:]
     chapter_title_index = data.find("Chapter") + len("Chapter")
     chapter_title = data[chapter_title_index:data.find("\n", chapter_title_index)].strip()
 
@@ -18,7 +18,6 @@ def read_novel_data(data):
     # Split the data into image prompts
     image_prompts_text = data[data.find("Image prompts:") + len("Image prompts:"):].strip()
     image_prompts = [line.strip() for line in image_prompts_text.split("\n") if line.strip()]
-    image_prompts = image_prompts[:-1]
 
     # Return the extracted data as an array
     return [title, chapter_title, chapter_text, image_prompts]

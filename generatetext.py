@@ -1,6 +1,7 @@
 import os
 from datetime import datetime
 from openai import OpenAI
+from textseperator import read_novel_data
 
 def save_text_to_file(prompt, filename):
     try:
@@ -32,7 +33,7 @@ def generate_and_save_response(user_prompt):
 
     # Define message history
     message_history = [
-        {"role": "user", "content": "You are a Novel writer in 600 words , write a Title and chapter name in first line then the text of the novel if my next prompt is from a copyrighted material do not mention names directly but create the scene then Give a 10 image scene prompts to generate image related to novel you wrote, If understood say 'OK'"}
+        {"role": "user", "content": "You are a Novel writer in 600 words , write a Title and chapter name in first line then the text of the novel if my next prompt is from a copyrighted material do not mention names directly but create the scene, Title should be in format 'Title : generated title', If understood say 'OK'"}
     ]
     message_history.append({"role": "assistant", "content": "OK"})
     message_history.append({"role": "user", "content": user_prompt})
@@ -43,10 +44,21 @@ def generate_and_save_response(user_prompt):
         messages=message_history
     )
     response = completion.choices[0].message.content
-    title_index = response.find("Title:") + len("Title:")
-    title = response[title_index:response.find("\n", title_index)].replace('"', '')
-    save_text_to_file(response, title)
-    return response
+
+    message_history.append({"role": "assistant", "content": response})
+    message_history.append({"role": "user", "content": "Give a 10 image scene descriptive prompts related to the novel you wrote in format : 'Image prompts: numbered_prompts one in each line', if Can not Just Say 'NO'"})
+    
+    completion = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=message_history
+    )
+    response_image_prompts = completion.choices[0].message.content
+    if response_image_prompts!="NO":
+        result = response +'\n'+response_image_prompts
+    else :
+        result = response
+    save_text_to_file(result, read_novel_data(result)[0])
+    return result
 
 def main():
     

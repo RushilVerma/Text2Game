@@ -4,15 +4,6 @@ import pyttsx3
 from generatetext import generate_and_save_response
 from textseperator import read_novel_data
 
-def extract_title(text):
-    # Extract title from the text
-    lines = text.split('\n')
-    for line in lines:
-        if line.startswith('Title:'):
-            return line.split(':')[1].strip()
-    # Return a default title if not found
-    return "Untitled"
-
 def save_audio(text, title):
     try:
         # Get the current timestamp
@@ -37,8 +28,10 @@ def save_audio(text, title):
         engine.runAndWait()
 
         print(f"Audio saved successfully as '{save_filename}' in the '{save_path}' directory.")
+        return save_path
     except Exception as e:
         print(f"An error occurred: {str(e)}")
+        return None
 
 if __name__ == "__main__":
 

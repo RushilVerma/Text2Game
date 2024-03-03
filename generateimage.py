@@ -5,7 +5,7 @@ from openai import OpenAI
 client = OpenAI(api_key=open('private/api_key.txt').read().strip('\n'))
 from textseperator import read_novel_data
 
-def download_image(url, title ,filename):
+def download_image(url, title="Untitled" ,filename="Filename"):
     try:
         response = requests.get(url)
         if response.status_code == 200:

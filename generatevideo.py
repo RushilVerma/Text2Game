@@ -26,7 +26,8 @@ def create_video(images_dir, audio_file, title):
     file_path = os.path.join(output_path,f'{title}.mp4')
     video_clip.write_videofile(file_path, codec='libx264', audio_codec='aac')
 
-    print(f"Video created successfully at {output_path}")
+    print(f"Video created successfully at {file_path}")
+    return file_path
 
 if __name__ == "__main__":
     text = open('output/text/Blooming Love_2024-03-03_16-31-39.txt').read()
